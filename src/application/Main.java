@@ -2,30 +2,20 @@ package application;
 	
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import application.UserInterface.SettingFrame;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -135,18 +125,22 @@ public class Main extends Application {
 	}
 	//-------------------crap-----------------------------
 	public void popup(AnchorPane a) {
-		String infotxt = "";
-		String[] tmp = new String[]
-				{"a","b","c"};
-		ChoiceDialog<String> dialog = new ChoiceDialog<>(tmp[0], tmp);
-		//dialog.setTitle("Choice Dialog");
+		String infotxt = "j";
+		String menueDescription = "f";
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Choice Dialog");
 		dialog.setHeaderText(infotxt);
-		dialog.setContentText("Choose your letter:");
+		dialog.setContentText(menueDescription);
 		Optional<String> result = dialog.showAndWait();
+		String tmp = "null";
 		if (result.isPresent()){
-		    System.out.println("Your choice: " + result.get());
-		}else {System.out.println("closed");};
-		
+		    //System.out.println("Your choice: " + result.get());
+		    tmp = result.get();
+		}else {
+			Main.main.addToLog("Choice Dialog closed");
+		}
+		System.out.println(tmp = result.get());
+		//return tmp;
 	}
 	//----------------------------------------------------
 	public void entry() {	

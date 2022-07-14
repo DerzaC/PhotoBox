@@ -71,7 +71,7 @@ public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeL
 					primRefresh();		
 					break;
 				case "WMOpacity":
-					
+					Main.settings.chooseWMOpacity();
 					primRefresh();		
 					break;
 					

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Optional;
 
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -78,8 +79,8 @@ public class Settings {
 	}
 	
 	private String[] getWatermarkOpacity() {
-		String infoText = "watermark Opacity (0-1)";
-		String currentSettings= ""+(watermarkOpacity*100-100)+"%";
+		String infoText = "watermark Opacity (0-100%)";
+		String currentSettings= ""+((1-watermarkOpacity)*100)+"%";
 		String eventID= "WMOpacity";
 		return new String[] {infoText,currentSettings,eventID};
 	}
@@ -126,7 +127,6 @@ public class Settings {
 		Optional<String> result = dialog.showAndWait();
 		String tmp = "null";
 		if (result.isPresent()){
-		    //System.out.println("Your choice: " + result.get());
 		    tmp = result.get();
 		}else {
 			Main.main.addToLog("Choice Dialog closed");
@@ -147,8 +147,51 @@ public class Settings {
 		}
 	}
 	
+	private String genInputPopup(String infotxt,String menueDescription) { //  --------------inputDiag
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Input Dialog");
+		dialog.setHeaderText(infotxt);
+		dialog.setContentText(menueDescription);
+		Optional<String> result = dialog.showAndWait();
+		String tmp = "null";
+		if (result.isPresent()){
+		    tmp = result.get();
+		}else {
+			Main.main.addToLog("Input Dialog closed");
+		}
+		return tmp;
+	}
 	
-	//---------------------------------------------------Printer
+	public void chooseWMOpacity() {
+		double old = this.watermarkOpacity;
+		boolean conditions=true;
+		String failed = "";
+		do {
+			conditions=true;
+			String tmp = genInputPopup(
+					"Choose Watermark opacity. (range between 0-100%)\n"+failed,
+					"choose");	
+			System.out.println(tmp);
+			if(!(tmp=="null")) {
+				try {
+					double temp =((100-Double.parseDouble(tmp))/100);
+					if(temp>=0 && temp<=1) {
+						this.watermarkOpacity=temp;
+					}else {
+						failed="ERROR: invalid Range";
+						conditions=false;
+					}
+					Main.main.addToLog("WatermarkOpacity changed from "+((1-old)*100)+" to: "+((1-watermarkOpacity)*100));
+				}catch(Exception e) {
+					failed="ERROR: invalid Value";
+					conditions=false;
+				}
+			}
+		}while(!conditions);				
+	}
+	
+	
+	//---------------------------------------------------Printer --- placeholder
 	private String dir1="-";
 	private String extension1="";
 	private String watermarkLoc1="";

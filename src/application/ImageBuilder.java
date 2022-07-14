@@ -49,7 +49,7 @@ public class ImageBuilder {
         // initializes necessary graphic properties
         Graphics2D w = (Graphics2D) watermarked.getGraphics();
         w.drawImage(image, 0, 0, null);
-        AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) settings.watermarkOpacity);//0.4f
+        AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) settings.watermarkOpacity);
        
         w.setComposite(alphaChannel);
 
