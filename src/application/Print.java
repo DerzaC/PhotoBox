@@ -20,31 +20,27 @@ public class Print {
 	Handler evHandler = Main.evHandler;
 	private String targetFile;
 	
-	public Print(String targetFile){
+	public Print() {
+		
+	}
+	
+	public boolean go(String targetFile){
 		this.targetFile=targetFile;
+		try {
+			Main.deamon.setPrintInProgress();
+			startPrint();			
+			return true;
+		} catch (PrintException | IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	public void main(String[] args) throws PrintException, IOException {
+	private void startPrint() throws PrintException, IOException {
 		PrintService ps = PrintServiceLookup.lookupDefaultPrintService();
 		DocPrintJob job = ps.createPrintJob();
 		settings();
 		job.addPrintJobListener(evHandler);
-//		job.addPrintJobListener(new PrintJobAdapter() {
-//			public void printDataTransferCompleted(PrintJobEvent event) {
-//				System.out.println("data transfer complete");
-//			}
-//
-//			public void printJobNoMoreEvents(PrintJobEvent event) {
-//				System.out.println("received no more events");
-//			}
-//
-//			public void printJobCompleted(PrintJobEvent pje) {
-//				System.out.println("done");
-//			}
-//		});
-		
-		
-		//String tempFile = Main.settings.Temp;
 		FileInputStream fis = new FileInputStream(targetFile);
 
 		// Doc doc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
@@ -71,4 +67,25 @@ public class Print {
 		}
 	}
 
+	/*
+	public void fuckOFff() {
+		PrinterJob printJob = PrinterJob.getPrinterJob();
+		PageFormat pageformat = new PageFormat();
+		pageformat = printJob.pageDialog(pageformat);  // Hier kommt der PageDialog
+		printJob.setPrintable(this //(da Printable implementiert werden muss)//, pageformat);
+		if (printJob.printDialog()){  // Dann ein Dialog in dem du deinen Drucker auswählen kannst
+			try {
+				printJob.print(); // Drucken
+			}
+			catch(PrinterException pe) {
+				sErr = "Error printing: " + pe;
+			}
+
+		}
+		}
+	
+	*/
+	
+	
+	
 }

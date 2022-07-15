@@ -118,7 +118,8 @@ public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeL
 		}
 		@Override
 		public void printJobNoMoreEvents(PrintJobEvent pje) {
-			System.out.println("printJobNoMoreEvents");
+			Main.main.addToLog("Printjob done");
+			Main.deamon.setPrintDone();
 			
 		}
 		@Override

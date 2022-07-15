@@ -25,6 +25,10 @@ public class ImageBuilder {
 	private Settings settings = Main.settings;
 	private String fileName;
 	private int filenum;
+	private File source;
+    private File watermark;
+    private File destination;
+	
 	
 	public ImageBuilder(String fileName,int filenum) {
 		this.fileName=fileName;
@@ -34,48 +38,42 @@ public class ImageBuilder {
 		destination = new File(settings.backupWatermarkedDir+"\\"+filenum+"Marked"+"."+settings.extension);
 	}
 	
-
+	public String getMarkedPath () {
+		return settings.backupWatermarkedDir+"\\"+filenum+"Marked"+"."+settings.extension;
+	}
 	
 	public boolean mark(){
 		try {
 			addImageWatermark();
+			Main.main.addToLog(settings.backupWatermarkedDir+"\\"+filenum+"Marked"+"."+settings.extension+" has been created");
 			return true;
 		} catch (IOException e) {
-			System.out.println(settings.dir+"\\"+fileName);
-			System.out.println(source);
 			Main.main.addToLog("ERROR: exec method addImageWatermark() failed");
 			e.printStackTrace();
 			return false;
 		}	
 	}
 	
-	
-
-	  private File source;// = new File(settings.dir+"\\"+fileName);
-      private File watermark;// = new File(settings.watermarkLoc);
-      private File destination;// = new File(settings.backupWatermarkedDir+fileName+"Marked");
-	
-	
-      public boolean backup() { 	
-    	  boolean ret = false;
-    	  Path copied = Paths.get(settings.backupDir+"\\"+filenum+"v"+"."+settings.extension);
-    	  Path originalPath = Paths.get(settings.dir+"\\"+fileName);
-    	  try {
-    		  Files.copy(originalPath, copied, StandardCopyOption.COPY_ATTRIBUTES);
-    		  ret=true;
-    	  } catch (IOException e) {
-    		  Main.main.addToLog("Backup "+fileName+" failed");
-    		  e.printStackTrace();
-    	  }  
-    	  return ret;
-      }
+	public boolean backup() { 	
+		boolean ret = false;
+		Path copied = Paths.get(settings.backupDir+"\\"+filenum+"v"+"."+settings.extension);
+		Path originalPath = Paths.get(settings.dir+"\\"+fileName);
+		try {
+			Files.copy(originalPath, copied, StandardCopyOption.COPY_ATTRIBUTES);
+			Main.main.addToLog(settings.backupDir+"\\"+filenum+"v"+"."+settings.extension+" has been created");
+			ret=true;
+		} catch (IOException e) {
+			Main.main.addToLog("Backup "+fileName+" failed");
+			e.printStackTrace();
+		}  
+		return ret;
+	}	
       
       
 	private void addImageWatermark() throws IOException {
         String type = "png";
 		BufferedImage image = ImageIO.read(source);
-	
-        
+	      
         BufferedImage overlay = resize(ImageIO.read(watermark),ImageIO.read(watermark).getHeight(),ImageIO.read(watermark).getWidth());
 
         // determine image type and handle correct transparency
@@ -89,7 +87,7 @@ public class ImageBuilder {
        
         w.setComposite(alphaChannel);
 
-        // calculates the coordinate where the String is painted
+        // calculates the coordinate where the Watermark is painted
         int centerX = settings.watermarkPos[0];
         int centerY = settings.watermarkPos[1];
 

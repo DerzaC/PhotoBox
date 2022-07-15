@@ -17,6 +17,16 @@ public class Deamon {
 	private Settings settings=Main.settings;
 	private boolean settingsChanged=false;
 	public static ArrayList<Task> tasks= new ArrayList<>();
+	private static boolean isPrinting=false;
+	
+	public void setPrintInProgress() {
+		Main.main.addToLog("Print started");
+		isPrinting = true;
+	}
+	
+	public void setPrintDone() {
+		isPrinting = false;
+	}
 
 
 	public String getAdded(int index) {
@@ -157,7 +167,7 @@ public class Deamon {
 			public void run() {
 				reFresh();
 				print();
-				startTasks();
+				if (!isPrinting)startTasks();
 				
 			}	
 		}		
@@ -177,6 +187,7 @@ public class Deamon {
 	private Task currentTask;
 	
 	private void startTasks() {
+		System.out.println("2");
 		if(currentTask != null) {
 			boolean[] temp=currentTask.isDone();
 			if (temp[temp.length-1]) {
@@ -211,8 +222,8 @@ public class Deamon {
 			public void go() {
 				if(isBackuped || imgBuild.backup())setBackuped();
 				if(isMarked || imgBuild.mark())setMarked();
-				//setMarked();
-				setPrinted();
+				String mp = imgBuild.getMarkedPath();
+				if(isPrinted || print.go(mp))setPrinted();
 			}
 		
 			private void setBackuped() {
@@ -249,6 +260,7 @@ public class Deamon {
 				count++;
 				Main.main.addToLog("Task nr "+nr+" - "+filename+" has been created");
 				this.filenum=settings.getPrefix();
+				this.print = new Print();
 			}
 		
 			public boolean[] isDone() {
