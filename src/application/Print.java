@@ -18,6 +18,11 @@ import javax.print.event.*;
 
 public class Print {
 	Handler evHandler = Main.evHandler;
+	private String targetFile;
+	
+	public Print(String targetFile){
+		this.targetFile=targetFile;
+	}
 
 	public void main(String[] args) throws PrintException, IOException {
 		PrintService ps = PrintServiceLookup.lookupDefaultPrintService();
@@ -37,8 +42,10 @@ public class Print {
 //				System.out.println("done");
 //			}
 //		});
-		String tempFile = Main.settings.Temp;
-		FileInputStream fis = new FileInputStream(tempFile);
+		
+		
+		//String tempFile = Main.settings.Temp;
+		FileInputStream fis = new FileInputStream(targetFile);
 
 		// Doc doc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
 		Doc doc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.JPEG, null);

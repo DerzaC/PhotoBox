@@ -58,7 +58,7 @@ public class Main extends Application {
 	}
 	
 	public void setPrimarySettingsToMainframe() {
-		int spaceBetween = 35;
+		int spaceBetween = 30;
 		clearMainframe();
 		if(!buildSettingsOnce) {
 			for (int i=0;i<primaryElements.length;i++) {
@@ -74,7 +74,7 @@ public class Main extends Application {
 	}
 	
 	public void setPrinterSettingsToMainframe() {
-		int spaceBetween = 35;
+		int spaceBetween = 30;
 		clearMainframe();
 		if(!buildPrinterSettingsOnce) {
 			for (int i=0;i<printElements.length;i++) {
@@ -136,7 +136,8 @@ public class Main extends Application {
 	}
 	//----------------------------------------------------
 	public void entry() {	
-		tmpFeed();		
+		settings.checkFilenameId();
+		//tmpFeed();		
 		deamon= new Deamon();	
 		//popup();
 	}
@@ -145,7 +146,7 @@ public class Main extends Application {
 		settings.dir="C:/tmp";
 		settings.extension="jpg";
 		settings.watermarkLoc="C:/tmp/wmark.png";
-		settings.targetImage="wallpaper.jpg";
+		//settings.targetImage="wallpaper.jpg";
 		settings.watermarkSizePercentage=1;
 		settings.watermarkPos= new int[] {10,10};
 		settings.watermarkOpacity=1;

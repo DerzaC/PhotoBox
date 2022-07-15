@@ -3,6 +3,7 @@ package application;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javafx.scene.Group;
@@ -20,37 +21,69 @@ import javafx.stage.Stage;
 
 public class Settings {
 	//-------------------------------------
-	public String Temp= "";
-	
-	
+	//public String Temp= "";
+
 	
 	
 	
 	//-----------------------------------------Primary
-	public String dir="-";
-	public String extension="";
-	public String watermarkLoc="";
-	public String targetImage="";
+	public static int prefix =10000;
+	public String dir="C:/tmp";
+	public String backupWatermarkedDir= dir+"\\wm";
+	public String backupDir= dir+"\\bu";
+	public String extension="jpg";
+	public String watermarkLoc="C:/tmp/wmark.png";
+	//public String targetImage="";
 	public double watermarkSizePercentage=1;
-	public int[] watermarkPos= new int[] {0,0};
-	public double watermarkOpacity;
+	public int[] watermarkPos= new int[] {10,10};
+	public double watermarkOpacity=1;
 	private UserInterface ui = Main.main.ui;
+	
+	public int getPrefix() {
+		prefix++;
+		return prefix-1;
+	}
+	
+	public Settings() {
+		
+	}
+	
+	public void checkFilenameId() {
+		File BUdir = new File(backupDir);
+		File MAdir = new File(backupWatermarkedDir);
+		String[] BUscan = BUdir.list();
+		String[] MAscan = MAdir.list();
+		Arrays.sort(MAscan);
+		int tmp = prefix;
+		for (int i = 0 ; i < BUscan.length; i++) {
+			if (BUscan[i].indexOf(""+tmp)>=0) {
+				i=0;
+				tmp++;
+			}else if(MAscan[MAscan.length-1].indexOf(""+tmp)>=0) {
+				i=0;
+				tmp++;
+			}			
+		}
+		prefix = tmp;
+		Main.main.addToLog("set fileCount to: "+Settings.prefix);
+	}
 	
 	public String[][] getPrimarySettings(){
 		int entrys  =7;
 		String[] A= getExample();
 		String[][]tmp=new String[][]{ 
 			getDirectory(),	
+			getBackupDirectory(),
+			getMarkedDirectory(),
 			getObservedExtension(),
 			getWatermarkLocation(),
 			getWatermarkSize(),
 			getWatermarkPos(),
 			getWatermarkOpacity()
 		};
-		return tmp;
-		
+		return tmp;	
 	}
-
+	
 	public String[] getExample() {
 		String infoText = "current dir:";
 		String currentSettings= "c:\\temp_unso";
@@ -65,13 +98,27 @@ public class Settings {
 		return new String[] {infoText,currentSettings,eventID};
 	}
 	
+	private String[] getBackupDirectory() {
+		String infoText = "Vanillia Images Backup Directory:";
+		String currentSettings= backupDir;
+		String eventID= "backupDir";
+		return new String[] {infoText,currentSettings,eventID};
+	}
+	
+	private String[] getMarkedDirectory() {
+		String infoText = "Watermarked Images Directory:";
+		String currentSettings= backupWatermarkedDir;
+		String eventID= "backupWatermarkedDir";
+		return new String[] {infoText,currentSettings,eventID};
+	}
+	
 	private String[] getObservedExtension() {
 		String infoText = "Filextension ";
 		String currentSettings= extension;
 		String eventID= "extension";
 		return new String[] {infoText,currentSettings,eventID};
 	}
-	
+		
 	private String[] getWatermarkLocation() {
 		String infoText = "Watermark Location(requires: png with transparent background)";
 		String currentSettings= watermarkLoc;

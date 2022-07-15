@@ -86,19 +86,19 @@ public class UserInterface extends Application {
 	
 	class SettingFrame{
 		//public Group view = new Group();
-		public AnchorPane anchor = new AnchorPane();
-		private double maxWidth = Main.w-space.left-space.right;
-		public String infoText="null";
-		public String currentSettings="null";
-		private Text tf = new Text();
-		private Text tf_Info = new Text();
-		private double buttonwidth = 80;
-		public double itemHeight = 25;
-		Rectangle bg = new Rectangle(maxWidth-buttonwidth-10,itemHeight);
-		Button bttn = new Button();
-		private String eventID="null0";
-		public int posNr;
-		public static int counter=0;
+		public AnchorPane 	anchor = 		new AnchorPane();
+		private double 		maxWidth = 		Main.w-space.left-space.right;
+		public String 		infoText=		"null";
+		public String 		currentSettings="null";
+		private Text 		tf = 			new Text();
+		private Text 		tf_Info = 		new Text();
+		private double 		buttonwidth = 	80;
+		public double 		itemHeight = 	25;
+		Rectangle 			bg = 			new Rectangle(maxWidth-buttonwidth-10,itemHeight);
+		Button 				bttn = 			new Button();
+		private String 		eventID=		"null0";
+		public int 			posNr;
+		public static int 	counter=		0;
 		
 		
 	 

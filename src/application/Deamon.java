@@ -115,7 +115,7 @@ public class Deamon {
 		observedDir = new File(settings.dir);
 		lastScan = observedDir.list();
 		Arrays.sort(lastScan);
-		ImageBuilder img = new ImageBuilder();
+		//ImageBuilder img = new ImageBuilder();
 		nestedLoop();
 	}
 	
@@ -132,22 +132,24 @@ public class Deamon {
 	}
 	
 	public void nestedLoop() {
-		Thread t1 = new Thread(new Nested());	
+		Thread t1 = new Thread(new NestedLoop());	
 		t1.setDaemon(true);	
 		t1.start();
 	}
 	
-	class Nested implements Runnable{
-		public void run() {
-			while(true) {
-				Platform.runLater(new RunLater());
-				try {
-					Thread.sleep(500);				
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}		
-			}
+		class NestedLoop implements Runnable{
+			public void run() {
+				boolean loop = true;
+				while(loop) {
+					Platform.runLater(new RunLater());
+					try {
+						Thread.sleep(500);				
+					} catch (InterruptedException e) {
+						Main.main.addToLog("ERROR: Nested Thread died");
+						loop=false;
+						e.printStackTrace();
+					}		
+				}
 		}	
 		
 		class RunLater implements Runnable{
@@ -155,51 +157,104 @@ public class Deamon {
 			public void run() {
 				reFresh();
 				print();
+				startTasks();
 				
 			}	
 		}		
 	}
-				// not failsafe if filename contains extension results in false-true
-	public void compareExtensions() {
+			//  /!\  Possibility of false-true  /!\
+	private void compareExtensions() {
 		String chosenExtrension = Main.settings.extension;
 		for (int i =0 ; i < addedElements.size(); i++) {
-			if(addedElements.get(i).indexOf(chosenExtrension) >= 0) {
+			if(addedElements.get(i).indexOf("."+chosenExtrension) >= 0) {
 				tasks.add(new Task(addedElements.get(i)));
 			}else {
 				Main.main.addToLog(addedElements.get(i)+" dropped, wrong Extension");
+			}		
+		}
+	}
+	
+	private Task currentTask;
+	
+	private void startTasks() {
+		if(currentTask != null) {
+			boolean[] temp=currentTask.isDone();
+			if (temp[temp.length-1]) {
+				this.currentTask=null;				
+			}else {
+				currentTask.go();
 			}
 			
+		}
+		if(currentTask == null && tasks.size() > 0) {
+			this.currentTask=tasks.get(0);
+			Main.main.addToLog("set Task "+currentTask.nr+" to active");
+			tasks.remove(0);
 		}
 	}
 	
 	
 	
-	class Task{
-		public String filename;
-		private boolean isBackuped;
-		private boolean isMarked;
-		private boolean isSaved;
+		class Task{
+			public int nr;
+			public static int count =0;
+			public String filename;
+			private boolean isBackuped=false;
+			private boolean isMarked=false;
+			private boolean isPrinted=false;
+			private ImageBuilder imgBuild;
+			private Print print;
+			private int filenum;
+			
+			
+			
+			public void go() {
+				if(isBackuped || imgBuild.backup())setBackuped();
+				if(isMarked || imgBuild.mark())setMarked();
+				//setMarked();
+				setPrinted();
+			}
 		
-		public void setBackuped(boolean isBackuped) {
-			this.isBackuped=isBackuped;
-		}
+			private void setBackuped() {
+				if (!isBackuped) {
+					isBackuped=true;
+				}else {
+					Main.main.addToLog("Warning: invalid execution of setBackuped()");
+				}
+			}
 		
-		public void setMarked(boolean isMarked) {
-			this.isMarked=isMarked;
-		}
+			private void setMarked() {
+				if (!isMarked) {
+					isMarked=true;
+				}else {
+					Main.main.addToLog("Warning: invalid execution of setMarked()");
+				}
+			}
 		
-		public void setSaved(boolean isSaved) {
-			this.isSaved=isSaved;
-		}
+			private void setPrinted() {
+				if (!isPrinted) {
+					isPrinted=true;
+				}else {
+					Main.main.addToLog("Warning: invalid execution of setSaved()");
+				}
+			}
+			
+			Task(){};
 		
-		Task(String filename){
-			this.filename=filename;
-			Main.main.addToLog("Task "+filename+" has been created");
-		}
+			Task(String filename){
+				this.filename=filename;
+				this.filenum=settings.getPrefix();
+				imgBuild = new ImageBuilder(filename,filenum);
+				this.nr=count;
+				count++;
+				Main.main.addToLog("Task nr "+nr+" - "+filename+" has been created");
+				this.filenum=settings.getPrefix();
+			}
 		
-		public boolean isDone() {
-			return isBackuped && isMarked && isSaved;
-		}	
+			public boolean[] isDone() {
+				boolean fina1 = isBackuped && isMarked && isPrinted;
+				return new boolean[] {isBackuped,isMarked,isPrinted,fina1};
+			}	
 	}
 	
 	
