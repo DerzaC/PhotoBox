@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import application.Deamon.Task;
 import javafx.application.Platform;
 
 
@@ -15,6 +16,7 @@ public class Deamon {
 	ArrayList<String> removedElements = new ArrayList<String>();
 	private Settings settings=Main.settings;
 	private boolean settingsChanged=false;
+	public static ArrayList<Task> tasks= new ArrayList<>();
 
 
 	public String getAdded(int index) {
@@ -42,6 +44,8 @@ public class Deamon {
 	public void clearRemoved() {
 		removedElements.clear();
 	}
+	
+
 
 	public boolean reFresh() {
 		clearAdd();
@@ -53,6 +57,7 @@ public class Deamon {
 		} else {
 			listChanges(newScan);
 			lastScan = newScan;
+			compareExtensions();
 		}
 		return false;
 	}
@@ -137,27 +142,65 @@ public class Deamon {
 			while(true) {
 				Platform.runLater(new RunLater());
 				try {
-					Thread.sleep(5000);				
+					Thread.sleep(500);				
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}		
 			}
 		}	
+		
 		class RunLater implements Runnable{
-
 			@Override
 			public void run() {
 				reFresh();
 				print();
 				
+			}	
+		}		
+	}
+				// not failsafe if filename contains extension results in false-true
+	public void compareExtensions() {
+		String chosenExtrension = Main.settings.extension;
+		for (int i =0 ; i < addedElements.size(); i++) {
+			if(addedElements.get(i).indexOf(chosenExtrension) >= 0) {
+				tasks.add(new Task(addedElements.get(i)));
+			}else {
+				Main.main.addToLog(addedElements.get(i)+" dropped, wrong Extension");
 			}
 			
 		}
-		
 	}
 	
 	
+	
+	class Task{
+		public String filename;
+		private boolean isBackuped;
+		private boolean isMarked;
+		private boolean isSaved;
+		
+		public void setBackuped(boolean isBackuped) {
+			this.isBackuped=isBackuped;
+		}
+		
+		public void setMarked(boolean isMarked) {
+			this.isMarked=isMarked;
+		}
+		
+		public void setSaved(boolean isSaved) {
+			this.isSaved=isSaved;
+		}
+		
+		Task(String filename){
+			this.filename=filename;
+			Main.main.addToLog("Task "+filename+" has been created");
+		}
+		
+		public boolean isDone() {
+			return isBackuped && isMarked && isSaved;
+		}	
+	}
 	
 	
 	

@@ -2,8 +2,10 @@ package application;
 	
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 
+import application.Deamon.Task;
 import application.UserInterface.SettingFrame;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -39,7 +41,7 @@ public class Main extends Application {
 	AnchorPane printerSettings= new AnchorPane();
 	SettingFrame[] primaryElements = ui.getSettingFrame(0);
 	SettingFrame[] printElements = ui.getSettingFrame(1);
-	
+
 	
 	public void removePrimarySettings() {
 		mainframe.getChildren().remove(primarySettings);

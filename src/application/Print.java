@@ -17,26 +17,28 @@ import javax.print.attribute.standard.OrientationRequested;
 import javax.print.event.*;
 
 public class Print {
+	Handler evHandler = Main.evHandler;
 
 	public void main(String[] args) throws PrintException, IOException {
 		PrintService ps = PrintServiceLookup.lookupDefaultPrintService();
 		DocPrintJob job = ps.createPrintJob();
 		settings();
-
-		job.addPrintJobListener(new PrintJobAdapter() {
-			public void printDataTransferCompleted(PrintJobEvent event) {
-				System.out.println("data transfer complete");
-			}
-
-			public void printJobNoMoreEvents(PrintJobEvent event) {
-				System.out.println("received no more events");
-			}
-
-			public void printJobCompleted(PrintJobEvent pje) {
-				System.out.println("done");
-			}
-		});
-		FileInputStream fis = new FileInputStream("C:/pbox/t01.jpg");
+		job.addPrintJobListener(evHandler);
+//		job.addPrintJobListener(new PrintJobAdapter() {
+//			public void printDataTransferCompleted(PrintJobEvent event) {
+//				System.out.println("data transfer complete");
+//			}
+//
+//			public void printJobNoMoreEvents(PrintJobEvent event) {
+//				System.out.println("received no more events");
+//			}
+//
+//			public void printJobCompleted(PrintJobEvent pje) {
+//				System.out.println("done");
+//			}
+//		});
+		String tempFile = Main.settings.Temp;
+		FileInputStream fis = new FileInputStream(tempFile);
 
 		// Doc doc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
 		Doc doc = new SimpleDoc(fis, DocFlavor.INPUT_STREAM.JPEG, null);

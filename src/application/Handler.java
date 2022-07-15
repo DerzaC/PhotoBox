@@ -1,5 +1,8 @@
 package application;
 
+import javax.print.event.PrintJobEvent;
+import javax.print.event.PrintJobListener;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,7 +13,7 @@ import javafx.collections.ObservableArray;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
-public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeListener, EventHandler<Event> {
+public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeListener, EventHandler<Event>,PrintJobListener {
 	
 		@Override
 		public void handle(Event arg0) {
@@ -88,6 +91,39 @@ public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeL
 		@Override
 		public void onChanged(ObservableArray arg0, boolean arg1, int arg2, int arg3) {
 			// TODO Auto-generated method stub
+			
+		}
+		
+		
+		//--------------------------------
+		@Override
+		public void printDataTransferCompleted(PrintJobEvent pje) {
+			System.out.println("printDataTransferCompleted");
+			
+		}
+		@Override
+		public void printJobCompleted(PrintJobEvent pje) {
+			System.out.println("printJobCompleted");
+			
+		}
+		@Override
+		public void printJobFailed(PrintJobEvent pje) {
+			System.out.println("printJobFailed");
+			
+		}
+		@Override
+		public void printJobCanceled(PrintJobEvent pje) {
+			System.out.println("printJobCanceled");
+			
+		}
+		@Override
+		public void printJobNoMoreEvents(PrintJobEvent pje) {
+			System.out.println("printJobNoMoreEvents");
+			
+		}
+		@Override
+		public void printJobRequiresAttention(PrintJobEvent pje) {
+			System.out.println("printJobRequiresAttention");
 			
 		}
 		

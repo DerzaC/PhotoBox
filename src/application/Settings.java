@@ -19,6 +19,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class Settings {
+	//-------------------------------------
+	public String Temp= "";
+	
+	
+	
+	
+	
 	//-----------------------------------------Primary
 	public String dir="-";
 	public String extension="";
@@ -262,7 +269,7 @@ public class Settings {
 		return new String[] {infoText,currentSettings,eventID};
 	}
 	
-	
+	//------------------preview------------------//
 	class  Preview{
 		Stage stage = new Stage();
 		AnchorPane prev;
@@ -271,8 +278,8 @@ public class Settings {
 		double dinA4 = 210.0/297.0;
 		static boolean panorama = true;
 		double heightBorder = 100;
-		
-		
+		 
+				
 		private Group paperFrame() {			
 			Group paper = new Group();
 			Rectangle background = new Rectangle(height-heightBorder,height-heightBorder);
@@ -288,8 +295,6 @@ public class Settings {
 			paperV.setLayoutX(panorama?bgx:bgx+delta/2);
 			paperV.setLayoutY(panorama?(bgy/2)+heightBorder:bgy);
 			paperV.setFill(new Color(1,0,0,0.2));
-			//ImageView img1 = new ImageView(new Image(getClass().getResourceAsStream(watermarkLoc)));
-			//Image image1 = new Image(test.class.getResourceAsStream("C:\\Users\\user\\Desktop\\x.jpg"));
 			FileInputStream input;
 			try {
 				input = new FileInputStream(watermarkLoc);
