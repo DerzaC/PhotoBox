@@ -1,11 +1,19 @@
 package application;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Optional;
 
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -16,7 +24,7 @@ public class Settings {
 	public String extension="";
 	public String watermarkLoc="";
 	public String targetImage="";
-	public double watermarkSizePercentage=0;
+	public double watermarkSizePercentage=1;
 	public int[] watermarkPos= new int[] {0,0};
 	public double watermarkOpacity;
 	private UserInterface ui = Main.main.ui;
@@ -139,7 +147,7 @@ public class Settings {
 		String tmp = genDropdownPopup(
 				"File Extension",
 				"choose",
-		new String[] {"jpg","png","bmp","ect"}	
+		new String[] {"jpg","png","bmp","gif"}	
 		);
 		if(!(tmp=="null")) {
 			this.extension=tmp;
@@ -170,8 +178,7 @@ public class Settings {
 			conditions=true;
 			String tmp = genInputPopup(
 					"Choose Watermark opacity. (range between 0-100%)\n"+failed,
-					"choose");	
-			System.out.println(tmp);
+					"enter Value");	
 			if(!(tmp=="null")) {
 				try {
 					double temp =((100-Double.parseDouble(tmp))/100);
@@ -188,6 +195,32 @@ public class Settings {
 				}
 			}
 		}while(!conditions);				
+	}
+	
+	public void chooseWMSize() {
+		double old = this.watermarkSizePercentage;
+		boolean conditions=true;
+		String failed = "";
+		do {
+			conditions=true;
+			String tmp = genInputPopup(
+					"Choose Watermark size.\n"+failed,
+					"enter Value");	
+			if(!(tmp=="null")) {
+				try {
+					double temp =(Double.parseDouble(tmp)/100);
+					this.watermarkSizePercentage=temp;
+					Main.main.addToLog("watermark size changed from "+(old*100)+" to: "+(watermarkSizePercentage*100));
+				}catch(Exception e) {
+					failed="ERROR: invalid Value";
+					conditions=false;
+				}
+			}
+		}while(!conditions);				
+	}
+	
+	public void chooseWMlocation() {
+		Preview perev = new Preview();
 	}
 	
 	
@@ -230,7 +263,68 @@ public class Settings {
 	}
 	
 	
+	class  Preview{
+		Stage stage = new Stage();
+		AnchorPane prev;
+		double width = 1000;
+		double height = 600;
+		double dinA4 = 210.0/297.0;
+		static boolean panorama = true;
+		double heightBorder = 100;
+		
+		
+		private Group paperFrame() {			
+			Group paper = new Group();
+			Rectangle background = new Rectangle(height-heightBorder,height-heightBorder);
+			background.setFill(new Color(0,0,0,0.5));
+			double bgx=width-height;
+			background.setLayoutX(bgx);
+			double bgy=heightBorder/2;
+			background.setLayoutY(bgy);
+			double pwidth= 	panorama?height-heightBorder:(height-heightBorder)*dinA4;
+			double pheight=	panorama?(height-heightBorder)*dinA4:height-heightBorder;
+			Rectangle paperV= new Rectangle(pwidth,pheight);
+			double delta = (height-heightBorder)-((height-heightBorder)*dinA4);
+			paperV.setLayoutX(panorama?bgx:bgx+delta/2);
+			paperV.setLayoutY(panorama?(bgy/2)+heightBorder:bgy);
+			paperV.setFill(new Color(1,0,0,0.2));
+			//ImageView img1 = new ImageView(new Image(getClass().getResourceAsStream(watermarkLoc)));
+			//Image image1 = new Image(test.class.getResourceAsStream("C:\\Users\\user\\Desktop\\x.jpg"));
+			FileInputStream input;
+			try {
+				input = new FileInputStream(watermarkLoc);
+				Image image = new Image(input);
+				ImageView imageView = new ImageView(image);
+				paper.getChildren().addAll(background,paperV,imageView);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//Image image1 = new Image(watermarkLoc);
+			
 	
+			return paper;
+		}
+		
+		public void builder() {
+			prev = new AnchorPane();
+			prev.getChildren().addAll(paperFrame());
+			//AnchorPane.setTopAnchor(prev, heightBorder/2);
+			//AnchorPane.setLeftAnchor(prev,width-height);
+		}
+		
+		public Preview() {	
+			builder();
+			Scene scene = new Scene(prev,width,height);
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			stage.setScene(scene);
+			stage.show();		
+		}
+		
+		
+		
+	}
 	
 
 	

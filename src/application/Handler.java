@@ -45,7 +45,6 @@ public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeL
 					break;
 				case "Folder Settings":
 					Main.main.setPrimarySettingsToMainframe();
-					//System.out.println("exec");
 					break;
 				case "Printer Settings":
 					Main.main.setPrinterSettingsToMainframe();
@@ -63,11 +62,11 @@ public class Handler  implements ChangeListener, ListChangeListener,ArrayChangeL
 					primRefresh();		
 					break;
 				case "WMSize":
-					
+					Main.settings.chooseWMSize();
 					primRefresh();		
 					break;
 				case "WMPos":
-					
+					Main.settings.chooseWMlocation();
 					primRefresh();		
 					break;
 				case "WMOpacity":

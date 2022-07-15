@@ -124,29 +124,19 @@ public class Main extends Application {
 		logs.setWrappingWidth(size[0]-15);
 	}
 	//-------------------crap-----------------------------
-	public void popup(AnchorPane a) {
-		String infotxt = "j";
-		String menueDescription = "f";
-		TextInputDialog dialog = new TextInputDialog();
-		dialog.setTitle("Choice Dialog");
-		dialog.setHeaderText(infotxt);
-		dialog.setContentText(menueDescription);
-		Optional<String> result = dialog.showAndWait();
-		String tmp = "null";
-		if (result.isPresent()){
-		    //System.out.println("Your choice: " + result.get());
-		    tmp = result.get();
-		}else {
-			Main.main.addToLog("Choice Dialog closed");
-		}
-		System.out.println(tmp = result.get());
-		//return tmp;
+	public void popup() {
+	AnchorPane prev = new AnchorPane();
+	Stage stage = new Stage();
+	Scene scene = new Scene(prev,800,800);
+	scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	stage.setScene(scene);
+	stage.show();
 	}
 	//----------------------------------------------------
 	public void entry() {	
 		tmpFeed();		
 		deamon= new Deamon();	
-		//popup(new AnchorPane());
+		//popup();
 	}
 	
 	private void tmpFeed(){
@@ -159,7 +149,7 @@ public class Main extends Application {
 		settings.watermarkOpacity=1;
 	}
 	
-	private boolean init = false;
+	//private boolean init = false;
 	@Override
 	public void start(Stage primaryStage) {
 		main=this;
